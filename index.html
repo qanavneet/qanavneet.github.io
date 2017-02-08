@@ -1,57 +1,3 @@
-<?php
-/*
-	if ($_SERVER["REQUEST_METHOD"] == "POST")
-	{
-		$name = test_input($_REQUEST["name"]);
-		$email = test_input($_REQUEST["email"]);
-		$phone = test_input($_REQUEST["phone"]);
-		$message2 = test_input($_REQUEST["message"]);
-
-		$message = '<html><body>';
-		$message .= '<table rules="all" style="border-color: #666;" cellpadding="10">';
-		$message .= "<tr style='background: #eee;'><td><strong>Name:</strong> </td><td>" . strip_tags($name) . "</td></tr>";
-		$message .= "<tr><td><strong>Email:</strong> </td><td>" . strip_tags($email) . "</td></tr>";
-		$message .= "<tr style='background: #eee;'><td><strong>Phone:</strong> </td><td>" . strip_tags($phone) . "</td></tr>";
-		$message .= "<tr><td><strong>Message:</strong> </td><td>" . strip_tags($message2) . "</td></tr>";
-		$message .= "</table>";
-		$message .= "</body></html>";
-
-		$to = 'india92navneet@gmail.com';
-
-		$subject = 'Contact Us Form Filled';
-
-		$headers = "From: " . $email . "\r\n";
-		$headers .= "Reply-To: ". strip_tags($email) . "\r\n";
-		$headers .= "MIME-Version: 1.0\r\n";
-		$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-
-		if (mail($to, $subject, $message, $headers))
-		{
-?>
-<script>
-	alert("Mail sent. Thank you.");
-</script>
-<?php
-		}
-		else
-		{
-?>
-<script>
-	alert("Something wrong with email script.");
-</script>
-<?php
-		}
-	}
-
-	function test_input($data)
-	{
-		$data = trim($data);
-		$data = stripslashes($data);
-		$data = htmlspecialchars($data);
-		return $data;
-	}
-*/
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -85,10 +31,6 @@
 				$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
 			});
 		});
-	function validateEmail(email) {
-		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		return re.test(email);
-	}
 </script>
 <!--//end-smooth-scrolling-->
 </head>
@@ -577,14 +519,45 @@
 					</div>
 					<div class="clearfix"></div>
 					<div class="contact-form">
-						<form action="" method="post" id="form1">
-							<input type="text" name="name" placeholder="Name" id="name" required="">
-							<input class="email" name="email" id="email" type="text" placeholder="Email" required="">
-							<input class="phone" name="phone" id="phone" type="text" placeholder="Phone" required="" maxlength="10">
-							<textarea name="message" id="message" placeholder="Message" required=""></textarea>
-							<input type="submit" value="SUBMIT">
+						<form action="mailto:india92navneet@gmail.com" enctype="text/plain" method="post" name="form">
+							<input type="text" name="Name" placeholder="Name" required="">
+							<input class="email" name="Email" type="text" placeholder="Email" required="">
+							<input class="phone" name="phone" type="text" placeholder="Phone" required="">
+							<textarea name="Message" placeholder="Message" required=""></textarea>
+							<input type="submit" value="SUBMIT" >
 						</form>
-					</div>
+</div>
+
+<?php
+if(isset($_POST["submit"])){
+// Checking For Blank Fields..
+if($_POST["Name"]==""||$_POST["email"]==""||$_POST["phone"]==""||$_POST["Message"]==""){
+echo "Fill All Fields..";
+}else{
+// Check if the "Sender's Email" input field is filled out
+$email=$_POST['vemail'];
+// Sanitize E-mail Address
+$email =filter_var($email, FILTER_SANITIZE_EMAIL);
+// Validate E-mail Address
+$email= filter_var($email, FILTER_VALIDATE_EMAIL);
+if (!$email){
+echo "Invalid Sender's Email";
+}
+else{
+$message = $_POST['msg'];
+$headers = 'From:'. $india92navneet@gmail.com . "\r\n"; // Sender's Email
+
+// Message lines should not exceed 70 characters (PHP rule), so wrap it
+$message = wordwrap($message, 70);
+// Send Mail By PHP Mail Function
+mail("recievers_mail_india92navneet@gmail.com", $subject, $message, $headers);
+echo "Your mail has been sent successfuly ! Thank you for your feedback";
+}
+}
+}
+?>
+					
+					
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -600,51 +573,15 @@
 	<!--//footer-->
 	<!--smooth-scrolling-of-move-up-->
 	<script type="text/javascript">
-		$(document).ready(function()
-		{
-			$("#form1").submit(function()
-			{
-				var name = $("#name").val();
-				var email = $("#email").val();
-				var phone = $("#phone").val();
-				var message = $("#message").val();
-
-				if (name == "")
-				{
-					alert("Name must be filled out.");
-					return false;
-				}
-				if (email == "")
-				{
-					alert("Email must be filled out.");
-					return false;
-				}
-				if (validateEmail(email))
-				{
-					alert("Email must be correct.");
-					return false;
-				}
-				if (phone == "")
-				{
-					alert("Phone must be filled out.");
-					return false;
-				}
-				if (message == "")
-				{
-					alert("Message must be filled out.");
-					return false;
-				}
-
-				return true;
-			});
-
+		$(document).ready(function() {
+		
 			var defaults = {
 				containerID: 'toTop', // fading element id
 				containerHoverID: 'toTopHover', // fading element hover id
 				scrollSpeed: 1200,
 				easingType: 'linear' 
 			};
-
+			
 			$().UItoTop({ easingType: 'easeOutQuart' });
 			
 		});
